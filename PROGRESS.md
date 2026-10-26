@@ -9,16 +9,16 @@
 - [x] Phase 4: cli and live run
 - [x] Phase 5: report and replay
 - [x] Phase 6: readme and ci
-- [ ] Phase 7: github push and verification
+- [x] Phase 7: github push and verification
 - [ ] Phase 8: optional vision
 
 ## Current state
 
-Phase 6 is done. `README.md` documents the simulated laptop trace, the Gemma setup, the PowerShell quickstart, replay without an API key, the flag and authorization rules, and the limitations. `.github/workflows/test.yml` runs `pytest -q` on Python 3.11 and 3.12 with no secrets and no live tests. The quickstart commands were run in a clean local clone. No `.env` file is tracked.
+Phase 7 is ticked. The secret scan found no tracked `.env` and no Gemini API key pattern in the tree or in history. LICENSE, README, the agent docs, the example record, the HTML report, and the test workflow are tracked. Offline tests pass. No `.env` file is tracked.
 
 ## Next step
 
-Phase 7: github push and verification.
+Demo video and submission post.
 
 ## Known issues
 
