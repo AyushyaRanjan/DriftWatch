@@ -8,17 +8,17 @@
 - [x] Phase 3: detector
 - [x] Phase 4: cli and live run
 - [x] Phase 5: report and replay
-- [ ] Phase 6: readme and ci
+- [x] Phase 6: readme and ci
 - [ ] Phase 7: github push and verification
 - [ ] Phase 8: optional vision
 
 ## Current state
 
-Phase 5 is done. `driftwatch replay` renders a saved run as one self-contained HTML file and labels it REPLAY. `examples/report.html` was produced from `examples/run_record.json` without another API call. Page text is HTML-escaped. Offline tests pass. The live test stays skipped unless `RUN_LIVE=1`. No `.env` file is tracked.
+Phase 6 is done. `README.md` documents the simulated laptop trace, the Gemma setup, the PowerShell quickstart, replay without an API key, the flag and authorization rules, and the limitations. `.github/workflows/test.yml` runs `pytest -q` on Python 3.11 and 3.12 with no secrets and no live tests. The quickstart commands were run in a clean local clone. No `.env` file is tracked.
 
 ## Next step
 
-Phase 6: readme and ci.
+Phase 7: github push and verification.
 
 ## Known issues
 
