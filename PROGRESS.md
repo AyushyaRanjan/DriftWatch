@@ -3,7 +3,7 @@
 ## Phases
 
 - [x] Phase 0: scaffold
-- [ ] Phase 1: gemma smoke test
+- [x] Phase 1: gemma smoke test
 - [ ] Phase 2: models and scenario
 - [ ] Phase 3: detector
 - [ ] Phase 4: cli and live run
@@ -14,15 +14,15 @@
 
 ## Current state
 
-Phase 0 scaffold is in place: git repository on `main`, ignore rules, env example, agent docs, decisions, and a stub README. No application code yet.
+Phase 1 is done. The package installs, `driftwatch` prints `0.1.0`, and offline client tests pass. `scripts/smoke_gemma.py` called `gemma-4-26b-a4b-it` and got a real reply. Temperature 0, JSON mode, and system instructions were accepted. The raw reply did not parse as JSON. D2 and D5 are accepted. No `.env` file is tracked.
 
 ## Next step
 
-Phase 1: Gemma smoke test.
+Phase 2: models and scenario.
 
 ## Known issues
 
-None.
+The Phase 1 smoke prompt asked for only a JSON object. Gemma wrapped the object in a markdown json code fence, so json.loads on the raw reply failed.
 
 ## Last agent and date
 

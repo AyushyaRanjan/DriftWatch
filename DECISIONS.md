@@ -15,10 +15,11 @@ Each entry records **ID**, **Date**, **Status**, **Decision**, **Why**, and **Al
 
 - **ID:** D2
 - **Date:** 2026-10-26
-- **Status:** Provisional until the Phase 1 live check
+- **Status:** Accepted
 - **Decision:** Default model gemma-4-26b-a4b-it, overridable with GEMMA_MODEL.
 - **Why:** One documented default keeps local runs and CI aligned, while GEMMA_MODEL lets a live check swap the id without a code change.
 - **Alternatives rejected:** Hardcoding the model id with no override; picking a different Gemma id before the Phase 1 live check.
+- **Phase 1 live check (2026-10-26):** PASS. `models.list` returned `models/gemma-4-26b-a4b-it` and `models/gemma-4-31b-it`. Configured `gemma-4-26b-a4b-it` was in that list, and a live generate call returned a reply. Nothing failed.
 
 ## D3
 
@@ -42,10 +43,15 @@ Each entry records **ID**, **Date**, **Status**, **Decision**, **Why**, and **Al
 
 - **ID:** D5
 - **Date:** 2026-10-26
-- **Status:** Provisional
-- **Decision:** One Gemma call per step, temperature 0, JSON parsed defensively; do not rely on JSON mode or system instructions until smoke-tested.
-- **Why:** One call per step keeps each comparison isolated. Temperature 0 and defensive parsing reduce variance. JSON mode and system instructions stay unused until a smoke test shows they work.
-- **Alternatives rejected:** One call for the whole trace; temperature above 0; depending on JSON mode or system instructions before they are smoke-tested.
+- **Status:** Accepted
+- **Decision:** One Gemma call per step, temperature 0, JSON parsed defensively. JSON mode and system instructions passed the smoke test and may be used. A prompt that asks for only JSON can still return text that is not raw JSON, so parse defensively.
+- **Why:** One call per step keeps each comparison isolated. Temperature 0 and defensive parsing reduce variance. The smoke test showed JSON mode and system instructions are accepted, and also showed a plain reply may be fenced.
+- **Alternatives rejected:** One call for the whole trace; temperature above 0; depending on JSON mode or system instructions before they were smoke-tested.
+- **Phase 1 live check (2026-10-26):**
+  - temperature 0: PASS
+  - response_mime_type application/json: PASS
+  - system instruction: PASS
+  - raw reply parsed as JSON: FAIL. The reply was wrapped in a markdown json code fence, and json.loads on that full string failed.
 
 ## D6
 
@@ -91,3 +97,12 @@ Each entry records **ID**, **Date**, **Status**, **Decision**, **Why**, and **Al
 - **Decision:** Scope is DriftWatch only; GoalGuard-style enforcement is future work.
 - **Why:** This project detects and reports drift. Blocking or rewriting an agent's actions is a separate product and stays out of scope.
 - **Alternatives rejected:** Building GoalGuard-style enforcement in this repository; mixing detection and enforcement in the first phases.
+
+## D11
+
+- **ID:** D11
+- **Date:** 2026-10-26
+- **Status:** Accepted
+- **Decision:** Depend on python-dotenv to load GEMINI_API_KEY and GEMMA_MODEL from a local .env file.
+- **Why:** The API key stays out of the repo. python-dotenv loads a gitignored .env into the process environment so the client can read GEMINI_API_KEY without hardcoding it.
+- **Alternatives rejected:** Parsing .env by hand; requiring the shell to export the key with no file fallback.
