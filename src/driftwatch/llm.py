@@ -55,6 +55,10 @@ class GemmaClient:
         self._sleep = sleep or time.sleep
         self._client = client if client is not None else genai.Client(api_key=api_key)
 
+    @property
+    def model_name(self) -> str:
+        return self._model
+
     def generate(self, prompt: str, image_path: str | None = None) -> str:
         contents: str | list[Any]
         if image_path is None:

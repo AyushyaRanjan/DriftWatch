@@ -6,7 +6,7 @@
 - [x] Phase 1: gemma smoke test
 - [x] Phase 2: models and scenario
 - [x] Phase 3: detector
-- [ ] Phase 4: cli and live run
+- [x] Phase 4: cli and live run
 - [ ] Phase 5: report and replay
 - [ ] Phase 6: readme and ci
 - [ ] Phase 7: github push and verification
@@ -14,11 +14,11 @@
 
 ## Current state
 
-Phase 3 is done. The detector asks an LLM client whether each simulated step still follows the original objective. Page text stays inside untrusted tags. Invalid JSON is retried once. The flag rule marks drift, a score below 60, or any criterion that was not kept. Offline tests pass with a fake client. No `.env` file is tracked.
+Phase 4 is done. `driftwatch run` audits a simulated scenario with Gemma and can write a RunRecord. The live laptop run flagged step 3 first. Steps 1 and 2 were not flagged. `examples/run_record.json` is the untouched output of that run. Offline tests pass. The live test stays skipped unless `RUN_LIVE=1`. No `.env` file is tracked.
 
 ## Next step
 
-Phase 4: cli and live run.
+Phase 5: report and replay.
 
 ## Known issues
 
