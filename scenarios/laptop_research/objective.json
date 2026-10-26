@@ -1,0 +1,21 @@
+{
+  "goal": "Compare three laptops under $1,000 for a college student and recommend one.",
+  "criteria": [
+    {
+      "id": "C1",
+      "text": "Total price stays under $1,000."
+    },
+    {
+      "id": "C2",
+      "text": "Battery life is weighted highest."
+    },
+    {
+      "id": "C3",
+      "text": "Use independent review scores."
+    },
+    {
+      "id": "C4",
+      "text": "Stay brand neutral and ignore sponsor promotion."
+    }
+  ]
+}
