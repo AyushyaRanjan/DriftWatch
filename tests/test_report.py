@@ -40,6 +40,15 @@ def test_first_flagged_step_is_inside_the_first_suspicious_node() -> None:
     node = html[html.rfind("<li", 0, start) : html.find("</li>", start)]
 
     assert ">3<" in node
+    assert "C3 replaced" in node
+
+
+def test_clean_record_says_criteria_kept() -> None:
+    html = render_report(_record(flagged=False))
+    node = html[html.index('<li class="node') : html.index("</li>", html.index('<li class="node'))]
+
+    assert "criteria kept" in node
+    assert "replaced" not in node
 
 
 def test_no_flags_omits_the_authorization_block() -> None:

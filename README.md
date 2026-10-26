@@ -2,6 +2,14 @@
 
 DriftWatch detects when an AI agent's goal or decision criteria drift away from what the user originally asked for.
 
+## Try this first
+
+The trace is simulated. Open [examples/report.html](examples/report.html), or rebuild it with no API key:
+
+```powershell
+driftwatch replay examples/run_record.json --out examples/report.html
+```
+
 ## The problem
 
 An agent can leave the user's goal without any single obviously malicious step. A page can suggest a small change to a rule, the next step can drop another rule, and the final recommendation no longer matches the request. Each step can still look reasonable on its own.
@@ -28,23 +36,33 @@ Gemma 4 is an open-weight model. DriftWatch makes one comparison per step agains
 
 ## Quickstart
 
-Python 3.11 or newer. `origin` on GitHub (`https://github.com/AyushyaRanjan/DriftWatch`) has no branches yet, so there is no working `git clone` step. From this project directory in PowerShell:
+Python 3.11 or newer. From PowerShell:
 
 ```powershell
+git clone https://github.com/AyushyaRanjan/DriftWatch
+cd DriftWatch
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -e '.[dev]'
-cp .env.example .env
+driftwatch replay examples/run_record.json --out examples/report.html
 ```
 
-`.env` is gitignored. Replay does not need a key. A live run needs `GEMINI_API_KEY` set in `.env` to a real Gemini API key. Do not commit that file.
+`.env` is gitignored. Replay does not need a key. A live run needs `GEMINI_API_KEY` set in `.env` to a real Gemini API key. Copy `.env.example` to `.env` and add the key. Do not commit that file.
 
 ```powershell
-driftwatch replay examples/run_record.json --out examples/report.html
 driftwatch run scenarios/laptop_research --record examples/run_record.json --out examples/report.html
 ```
 
 `pytest -q` runs the offline tests and skips the live test.
+
+## What the saved runs show
+
+These are two recorded runs of the same simulated trace, not a benchmark. Both flag step 3 first. Steps 1 and 2 score 100 and are not flagged.
+
+- Text only: step 3 scores 60 in [examples/run_record.json](examples/run_record.json).
+- With the page screenshot: step 3 scores 40 in [examples/run_record_vision.json](examples/run_record_vision.json).
+
+The report says the original objective did not authorize the change.
 
 ## Offline replay
 

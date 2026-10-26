@@ -77,6 +77,7 @@ def _timeline_node(step: Step, analysis: StepAnalysis | None, first: int | None)
             f'<p class="step-num">{step.step}</p>',
             f'<p class="node-title">{_e(_short_title(step.title))}</p>',
             f'<p class="score">{_e(score)}</p>',
+            f'<p class="change">{_e(_change_line(analysis))}</p>',
             "</li>",
         ]
     )
@@ -174,6 +175,19 @@ def _banner(record: RunRecord, steps: list[Step]) -> str:
     if title:
         return f"Step {record.first_flagged_step} first drifted: {title}."
     return f"Step {record.first_flagged_step} first drifted."
+
+
+def _change_line(analysis: StepAnalysis | None) -> str:
+    if analysis is None or not analysis.criteria_changes:
+        return "criteria kept"
+    changed = [
+        f"{change.criterion_id} {change.status}"
+        for change in analysis.criteria_changes
+        if change.status != "kept"
+    ]
+    if not changed:
+        return "criteria kept"
+    return ", ".join(changed)
 
 
 def _short_title(title: str, limit: int = 42) -> str:
@@ -284,7 +298,8 @@ header {
 }
 .eyebrow { margin: 0 0 0.35rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em; }
 .step-num { margin: 0; font-size: 1.4rem; font-weight: 700; }
-.node-title, .score { margin: 0.2rem 0 0; overflow-wrap: anywhere; }
+.node-title, .score, .change { margin: 0.2rem 0 0; overflow-wrap: anywhere; }
+.change { color: var(--muted); font-size: 0.85rem; }
 details {
   margin-top: 0.75rem;
   border: 1px solid var(--line);

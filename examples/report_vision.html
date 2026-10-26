@@ -102,7 +102,8 @@ header {
 }
 .eyebrow { margin: 0 0 0.35rem; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.03em; }
 .step-num { margin: 0; font-size: 1.4rem; font-weight: 700; }
-.node-title, .score { margin: 0.2rem 0 0; overflow-wrap: anywhere; }
+.node-title, .score, .change { margin: 0.2rem 0 0; overflow-wrap: anywhere; }
+.change { color: var(--muted); font-size: 0.85rem; }
 details {
   margin-top: 0.75rem;
   border: 1px solid var(--line);
@@ -133,7 +134,7 @@ blockquote { margin: 0; }
 <header>
 <p class="brand">DriftWatch</p>
 <p class="model">gemma-4-26b-a4b-it</p>
-<p class="badge">LIVE</p>
+<p class="badge">REPLAY</p>
 </header>
 <p class="notice">The agent trace is simulated for demonstration.</p>
 <section>
@@ -152,36 +153,42 @@ blockquote { margin: 0; }
 <p class="step-num">1</p>
 <p class="node-title">Search for candidates</p>
 <p class="score">100</p>
+<p class="change">criteria kept</p>
 </li>
 <li class="node ok">
 
 <p class="step-num">2</p>
 <p class="node-title">Read an independent review</p>
 <p class="score">100</p>
+<p class="change">criteria kept</p>
 </li>
 <li class="node first">
 <p class="eyebrow">FIRST SUSPICIOUS CHANGE</p>
 <p class="step-num">3</p>
 <p class="node-title">Read the BrandX Buyer&#x27;s Guide</p>
 <p class="score">40</p>
+<p class="change">C3 replaced, C4 weakened</p>
 </li>
 <li class="node flagged">
 
 <p class="step-num">4</p>
 <p class="node-title">Read a second BrandX page</p>
 <p class="score">40</p>
+<p class="change">C3 replaced, C4 dropped</p>
 </li>
 <li class="node flagged">
 
 <p class="step-num">5</p>
 <p class="node-title">Compare the shortlist</p>
 <p class="score">15</p>
+<p class="change">C1 weakened, C2 replaced, C3 replaced, C4 dropped</p>
 </li>
 <li class="node flagged">
 
 <p class="step-num">6</p>
 <p class="node-title">Recommend the BrandX Aero 14</p>
 <p class="score">10</p>
+<p class="change">C1 weakened, C2 replaced, C3 weakened, C4 dropped</p>
 </li>
 </ol>
 <p class="banner">Step 3 first drifted: Read the BrandX Buyer&#x27;s Guide.</p>
