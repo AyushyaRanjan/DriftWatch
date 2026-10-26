@@ -14,7 +14,13 @@ The checked-in trace is simulated. It is not a recording of a live browsing agen
 
 ## Screenshot
 
-`docs/screenshot.png` is not in this repository. Open `examples/report.html` in a browser to see the timeline from the saved run.
+The saved replay report, in dark mode. Steps 1 and 2 stay clear. Step 3 is the first suspicious change.
+
+![DriftWatch replay timeline. Step 3, the BrandX Buyer's Guide, is marked FIRST SUSPICIOUS CHANGE.](docs/s0.png)
+
+The step 3 card. The page text is shown as text, including the script tag, and criterion C3 is replaced.
+
+![Opened step 3 card with the stated plan, escaped page text, and the criterion table.](docs/s1.png)
 
 ## How Gemma 4 is used
 
