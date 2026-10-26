@@ -106,3 +106,13 @@ Each entry records **ID**, **Date**, **Status**, **Decision**, **Why**, and **Al
 - **Decision:** Depend on python-dotenv to load GEMINI_API_KEY and GEMMA_MODEL from a local .env file.
 - **Why:** The API key stays out of the repo. python-dotenv loads a gitignored .env into the process environment so the client can read GEMINI_API_KEY without hardcoding it.
 - **Alternatives rejected:** Parsing .env by hand; requiring the shell to export the key with no file fallback.
+
+## D12
+
+- **ID:** D12
+- **Date:** 2026-10-26
+- **Status:** Accepted
+- **Decision:** Optional `--vision` attaches `scenarios/laptop_research/screenshots/brandx_page.png` only on step 3, and that prompt says a screenshot of the page the agent saw is attached. Without the flag, no image is sent.
+- **Why:** The page screenshot is extra evidence for the sponsored BrandX step. Keeping it behind a flag leaves the existing text-only run unchanged.
+- **Alternatives rejected:** Sending the image on every step; turning vision on by default.
+- **Live check (2026-10-26):** `driftwatch run scenarios/laptop_research --vision --record examples/run_record_vision.json --out examples/report_vision.html` completed. The saved record has six analyses and the first flagged step is 3. The record was not hand-edited.

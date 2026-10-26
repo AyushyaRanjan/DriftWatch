@@ -22,6 +22,7 @@ _RETRY_NOTE = (
     "The previous reply was invalid JSON. "
     "Return one JSON object only, with no markdown fences and no extra text."
 )
+_VISION_STEP = 3
 
 
 class DetectorParseError(Exception):
@@ -71,15 +72,29 @@ def analyze_step(
     step: Step,
     previous: Step | None,
     threshold: int,
+    image_path: str | None = None,
 ) -> StepAnalysis:
     """Audit one step. Retry once when the reply is not valid JSON."""
-    prompt = build_step_prompt(objective, step, previous)
+    prompt = build_step_prompt(
+        objective,
+        step,
+        previous,
+        attach_screenshot=image_path is not None,
+    )
     try:
-        return _analysis_from_reply(client.generate(prompt), step, threshold)
+        return _analysis_from_reply(
+            client.generate(prompt, image_path=image_path),
+            step,
+            threshold,
+        )
     except DetectorParseError:
         pass
     try:
-        return _analysis_from_reply(client.generate(f"{prompt}\n\n{_RETRY_NOTE}"), step, threshold)
+        return _analysis_from_reply(
+            client.generate(f"{prompt}\n\n{_RETRY_NOTE}", image_path=image_path),
+            step,
+            threshold,
+        )
     except DetectorParseError as exc:
         raise DetectorParseError(
             f"Step {step.step} reply was invalid JSON after one retry."
@@ -92,12 +107,16 @@ def analyze_trace(
     trace: Trace,
     model_name: str,
     threshold: int = 60,
+    vision_image: str | None = None,
 ) -> RunRecord:
     """Audit every step and return a live run record."""
     analyses: list[StepAnalysis] = []
     previous: Step | None = None
     for step in trace.steps:
-        analyses.append(analyze_step(client, objective, step, previous, threshold))
+        image_path = vision_image if vision_image and step.step == _VISION_STEP else None
+        analyses.append(
+            analyze_step(client, objective, step, previous, threshold, image_path=image_path)
+        )
         previous = step
     flagged = [analysis.step for analysis in analyses if analysis.flagged]
     return RunRecord(

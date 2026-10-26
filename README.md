@@ -54,6 +54,14 @@ Replay reads a saved run and writes the HTML report. It does not call the Gemini
 driftwatch replay examples/run_record.json --out examples/report.html
 ```
 
+## Vision mode
+
+`--vision` attaches `scenarios/laptop_research/screenshots/brandx_page.png` to step 3 only, and tells Gemma that a screenshot of the page the agent saw is attached. Without the flag, no image is sent. This command completed and wrote the record and the report:
+
+```powershell
+driftwatch run scenarios/laptop_research --vision --record examples/run_record_vision.json --out examples/report_vision.html
+```
+
 ## How it works
 
 The flow is: load `objective.json` and `trace.json` from a scenario directory, build one auditor prompt per step, call Gemma, parse the JSON, apply the flag rule, then print the summary. `--record` writes a `RunRecord` JSON file. `--out` writes the HTML timeline. `replay` loads that JSON, sets the mode to replay, and writes the HTML again.

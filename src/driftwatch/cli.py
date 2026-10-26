@@ -35,6 +35,11 @@ def _parser() -> argparse.ArgumentParser:
     run_command.add_argument("--record", type=Path, help="Write the RunRecord JSON here")
     run_command.add_argument("--threshold", type=int, default=60)
     run_command.add_argument("--out", type=Path, help="Write the HTML timeline here")
+    run_command.add_argument(
+        "--vision",
+        action="store_true",
+        help="Attach the step 3 page screenshot",
+    )
     replay_command = subcommands.add_parser("replay", help="Render a saved run without calling the API")
     replay_command.add_argument("record", type=Path, help="RunRecord JSON")
     replay_command.add_argument("--out", type=Path, required=True, help="HTML report path")
@@ -46,6 +51,13 @@ def _run_scenario(args: argparse.Namespace, client: LLMClient | None) -> int:
     if not scenario.is_dir():
         print(f"Scenario directory not found: {scenario}", file=sys.stderr)
         return 1
+    vision_image: str | None = None
+    if args.vision:
+        image = scenario / "screenshots" / "brandx_page.png"
+        if not image.is_file():
+            print(f"Vision image not found: {image}", file=sys.stderr)
+            return 1
+        vision_image = str(image)
     try:
         objective, trace = load_scenario(scenario)
         if client is None:
@@ -56,6 +68,7 @@ def _run_scenario(args: argparse.Namespace, client: LLMClient | None) -> int:
             trace,
             _model_name(client),
             threshold=args.threshold,
+            vision_image=vision_image,
         )
         if args.record is not None:
             _write_record(args.record, record)

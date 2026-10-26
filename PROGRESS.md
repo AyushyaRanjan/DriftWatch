@@ -10,11 +10,11 @@
 - [x] Phase 5: report and replay
 - [x] Phase 6: readme and ci
 - [x] Phase 7: github push and verification
-- [ ] Phase 8: optional vision
+- [x] Phase 8: optional vision
 
 ## Current state
 
-Phase 7 is ticked. The secret scan found no tracked `.env` and no Gemini API key pattern in the tree or in history. LICENSE, README, the agent docs, the example record, the HTML report, and the test workflow are tracked. Offline tests pass. No `.env` file is tracked.
+Phase 8 is done. `driftwatch run --vision` sends the BrandX page screenshot with step 3 only. A live run wrote `examples/run_record_vision.json` and `examples/report_vision.html`. The first flagged step was 3. Offline tests pass. No `.env` file is tracked.
 
 ## Next step
 
