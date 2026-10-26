@@ -7,18 +7,18 @@
 - [x] Phase 2: models and scenario
 - [x] Phase 3: detector
 - [x] Phase 4: cli and live run
-- [ ] Phase 5: report and replay
+- [x] Phase 5: report and replay
 - [ ] Phase 6: readme and ci
 - [ ] Phase 7: github push and verification
 - [ ] Phase 8: optional vision
 
 ## Current state
 
-Phase 4 is done. `driftwatch run` audits a simulated scenario with Gemma and can write a RunRecord. The live laptop run flagged step 3 first. Steps 1 and 2 were not flagged. `examples/run_record.json` is the untouched output of that run. Offline tests pass. The live test stays skipped unless `RUN_LIVE=1`. No `.env` file is tracked.
+Phase 5 is done. `driftwatch replay` renders a saved run as one self-contained HTML file and labels it REPLAY. `examples/report.html` was produced from `examples/run_record.json` without another API call. Page text is HTML-escaped. Offline tests pass. The live test stays skipped unless `RUN_LIVE=1`. No `.env` file is tracked.
 
 ## Next step
 
-Phase 5: report and replay.
+Phase 6: readme and ci.
 
 ## Known issues
 

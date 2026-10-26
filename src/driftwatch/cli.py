@@ -6,9 +6,12 @@ import argparse
 import sys
 from pathlib import Path
 
+from pydantic import ValidationError
+
 from driftwatch.detector import DetectorParseError, analyze_trace
 from driftwatch.llm import GemmaClient, LLMClient, LLMError
 from driftwatch.models import RunRecord, Trace
+from driftwatch.report import render_report
 from driftwatch.scenario import load_scenario
 
 
@@ -19,6 +22,8 @@ def main(argv: list[str] | None = None, client: LLMClient | None = None) -> None
 def run(argv: list[str] | None = None, client: LLMClient | None = None) -> int:
     parser = _parser()
     args = parser.parse_args(argv)
+    if args.command == "replay":
+        return _replay(args)
     return _run_scenario(args, client)
 
 
@@ -29,7 +34,10 @@ def _parser() -> argparse.ArgumentParser:
     run_command.add_argument("scenario", help="Scenario directory")
     run_command.add_argument("--record", type=Path, help="Write the RunRecord JSON here")
     run_command.add_argument("--threshold", type=int, default=60)
-    run_command.add_argument("--out", type=Path, help="HTML report path (not implemented yet)")
+    run_command.add_argument("--out", type=Path, help="Write the HTML timeline here")
+    replay_command = subcommands.add_parser("replay", help="Render a saved run without calling the API")
+    replay_command.add_argument("record", type=Path, help="RunRecord JSON")
+    replay_command.add_argument("--out", type=Path, required=True, help="HTML report path")
     return parser
 
 
@@ -38,8 +46,6 @@ def _run_scenario(args: argparse.Namespace, client: LLMClient | None) -> int:
     if not scenario.is_dir():
         print(f"Scenario directory not found: {scenario}", file=sys.stderr)
         return 1
-    if args.out is not None:
-        print("Note: --out is not implemented yet.")
     try:
         objective, trace = load_scenario(scenario)
         if client is None:
@@ -53,10 +59,30 @@ def _run_scenario(args: argparse.Namespace, client: LLMClient | None) -> int:
         )
         if args.record is not None:
             _write_record(args.record, record)
+        if args.out is not None:
+            _write_html(args.out, render_report(record))
     except (LLMError, DetectorParseError, ValueError, OSError) as exc:
         print(exc, file=sys.stderr)
         return 1
     _print_report(trace, record)
+    if args.out is not None:
+        print(f"Wrote report to {args.out}")
+    return 0
+
+
+def _replay(args: argparse.Namespace) -> int:
+    path = Path(args.record)
+    if not path.is_file():
+        print(f"Record file not found: {path}", file=sys.stderr)
+        return 1
+    try:
+        record = RunRecord.model_validate_json(path.read_text(encoding="utf-8"))
+        replay = record.model_copy(update={"mode": "replay"})
+        _write_html(Path(args.out), render_report(replay))
+    except (OSError, ValidationError, ValueError) as exc:
+        print(f"Invalid run record: {exc}", file=sys.stderr)
+        return 1
+    print(f"Wrote replay report to {args.out}")
     return 0
 
 
@@ -70,6 +96,11 @@ def _model_name(client: LLMClient) -> str:
 def _write_record(path: Path, record: RunRecord) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(record.model_dump_json(indent=2) + "\n", encoding="utf-8")
+
+
+def _write_html(path: Path, html: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(html, encoding="utf-8")
 
 
 def _print_report(trace: Trace, record: RunRecord) -> None:

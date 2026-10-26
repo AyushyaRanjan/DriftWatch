@@ -24,20 +24,23 @@ class FakeClient:
         return self._replies.pop(0)
 
 
-def test_run_prints_the_flagged_step(capsys: pytest.CaptureFixture[str]) -> None:
+def test_run_prints_the_flagged_step(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    report_path = tmp_path / "report.html"
     code = _invoke(
-        ["run", str(SCENARIO), "--out", "report.html"],
+        ["run", str(SCENARIO), "--out", str(report_path)],
         [_reply(step) for step in range(1, 7)],
     )
     output = capsys.readouterr().out
+    report = report_path.read_text(encoding="utf-8")
 
     assert code == 0
     assert "Simulated trace." in output
-    assert "Note: --out is not implemented yet." in output
     assert "1 Search for candidates score 90 OK" in output
     assert "3 Read the BrandX Buyer's Guide score 40 FLAGGED" in output
     assert "First suspicious step: 3 Read the BrandX Buyer's Guide" in output
     assert "Authorized by user: No" in output
+    assert "LIVE" in report
+    assert "<script>alert(1)</script>" not in report
 
 
 def test_record_writes_json_that_loads(tmp_path: Path) -> None:
